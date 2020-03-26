@@ -13,7 +13,10 @@ function App() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      setPosts(datajson.questoes);
+      setPosts(datajson.questoes.map((item, index) =>{
+        item.idPergunta = index;
+        return item;
+      }));
       setLoading(false);
     };
     fetchPosts();
@@ -24,10 +27,12 @@ function App() {
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <Container className="mt-5">
       <Posts posts={currentPosts} loading={loading} />
-      <Pagination postsPerPage={postsPerPage} totalPosts={posts.length} />
+      <Pagination postsPerPage={postsPerPage} totalPosts={posts.length} paginate={paginate} />
     </Container>
   );
 }
