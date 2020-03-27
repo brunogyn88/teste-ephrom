@@ -31,9 +31,25 @@ function App() {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+
+    const filterList = (event) => {
+      console.log(event);
+      var updatedList = datajson.questoes.map((item, index) =>{
+        item.idPergunta = index;
+        return item;
+      });
+      updatedList = updatedList.filter(function(item){
+        return item.Pergunta.toLowerCase().search(
+          event.toLowerCase()) !== -1;
+      });
+      setPosts(updatedList);
+      setFilter(event);
+    }
+
+
   return (
     <Container className="mt-5">
-      <Filter fitler={fitler} filtered={setFilter} />
+      <Filter fitler={fitler} filtered={filterList} />
       <Posts posts={currentPosts} loading={loading} />
       <Pagination postsPerPage={postsPerPage} totalPosts={posts.length} paginate={paginate} />
     </Container>
