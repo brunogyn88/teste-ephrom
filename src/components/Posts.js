@@ -8,8 +8,6 @@ const Posts = ({ posts, loading }) => {
   console.log({updatedList});
   const handleClose = () => setShow(false);
   const handleShow = e => {
-    console.log(posts);
-    console.log(e.target.value);
 
     setUpdatedList(
       posts.find(item => e.target.value === item.ID).Respostas
@@ -47,25 +45,25 @@ const Posts = ({ posts, loading }) => {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Repostas</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {updatedList.map((resposta, index) => (
             <Form.Check
               inline
-              disabled
               label={resposta.Texto}
               type="radio"
-              id={index}
+              name="perguntas"
+              key={index}
             />
           ))}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close
+            Fechar
           </Button>
           <Button variant="primary" onClick={handleClose}>
-            Save Changes
+            Ok
           </Button>
         </Modal.Footer>
       </Modal>

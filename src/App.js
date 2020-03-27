@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import datajson from "./data/data.json";
-import { Container } from "react-bootstrap";
+import { Container, Alert } from "react-bootstrap";
 import Posts from "./components/Posts";
 import Pagination from "./components/Pagination";
 import Filter from "./components/Filter";
 import * as _ from "lodash";
 
-var arrayHistory = (localStorage.getItem("historico") || "").split(",") || [] ;
+var arrayHistory = (localStorage.getItem("historico") || "").split(",") || [];
 var onExemplo = filter => {
   if (!filter) return;
   arrayHistory.push(filter);
-  localStorage.setItem("historico", arrayHistory)
+  localStorage.setItem("historico", arrayHistory);
 };
 
 const saveHistoric = _.debounce(text => onExemplo(text), 2000);
@@ -36,7 +36,6 @@ function App() {
     fetchPosts();
   }, []);
 
-  console.log(posts);
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
@@ -44,14 +43,18 @@ function App() {
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
   const filterList = text => {
-    var updatedList = posts;
-    updatedList = updatedList.filter(function(item) {
+    var respostas = datajson.questoes.map((item, index) => {
+      item.idPergunta = index;
+      return item;
+    });
+    respostas = respostas.filter(function(item) {
       return item.Respostas.filter(resp => {
         return resp.Texto.toLowerCase().search(text.toLowerCase()) !== -1;
       }).length;
     });
     console.log("Pesquisando");
-    setPosts(updatedList);
+    console.log({ respostas });
+    setPosts(respostas);
     setFilter(text);
   };
 
@@ -63,7 +66,11 @@ function App() {
   return (
     <Container className="mt-5">
       <Filter fitler={fitler} filtered={onChange} />
-      <Posts posts={currentPosts} loading={loading} />
+      {!posts.length ? (
+        <Alert variant="warning">Não encontramos a palavra</Alert>
+      ) : (
+        <Posts posts={currentPosts} loading={loading} />
+      )}
       <Pagination
         postsPerPage={postsPerPage}
         totalPosts={posts.length}
